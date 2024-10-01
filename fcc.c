@@ -50,10 +50,8 @@ int main(int argc, char** argv) {
             		write++;
 					break;
 				}
-				for(int i = 0; i < 10; i++) {
-					fputc(0x00, outfile) ; 
-					write++; 
-				}
+                pbyte(outfile, 10);
+				write += 10;
 				break;
 			case 0x24 :
 				if (ignore){
@@ -61,12 +59,9 @@ int main(int argc, char** argv) {
 					write++;
 					break;
 				}
-				for(int i = 0; i < 1024; i++) {
-					fputc(0x00, outfile) ; 
-					write++;
-					
-					 
-				}
+				pbyte(outfile, 1024);
+				write += 1024;
+				
 				break;
 			case 0x26 :
 				if (ignore){
