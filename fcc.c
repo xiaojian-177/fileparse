@@ -12,23 +12,32 @@ void pbyte(FILE* stream, int num) {
 }
 
 int main(int argc, char** argv) {
-	if (argc != 3 && argc != 4) {
+	if (argc < 3) {
 		printf("Usage: %s filein fileout\nfilein format:& is 1MB, $ is 1KB, . is 10Bytes", argv[0]);
 		exit(1);
 		
 	}
+	
 	FILE* outfile;
 	FILE* infile;
 	bool ignore = false;
-	
-	if(argc == 4 && strcmp(argv[3] ,"--ignore-all") == 0){
-		ignore = true;
-		printf("Warning:ignore all format string.\n");
-		
+	for (int count = 0; count < argc; count++){
+		if(argc == 4 && strcmp(argv[count] ,"--ignore-all") == 0){
+			ignore = true;
+			printf("Warning:ignore all format string.\n");
+			
+		}
 	}
+	
+
 	
 	outfile = fopen(argv[2], "wb");
 	infile = fopen(argv[1], "rb");
+	if (infile == NULL || outfile == NULL) {
+		perror("Error opening file");
+		exit(1);
+		
+	}
 	unsigned char buff;
 	int byte = 0;
 	int write = 0;
@@ -37,6 +46,8 @@ int main(int argc, char** argv) {
 		switch (buff) {
             case 0x2e :
             	if (ignore){
+            		fputc(0x2e, outfile);
+            		write++;
 					break;
 				}
 				for(int i = 0; i < 10; i++) {
@@ -46,6 +57,8 @@ int main(int argc, char** argv) {
 				break;
 			case 0x24 :
 				if (ignore){
+					fputc(0x24, outfile);
+					write++;
 					break;
 				}
 				for(int i = 0; i < 1024; i++) {
@@ -57,6 +70,8 @@ int main(int argc, char** argv) {
 				break;
 			case 0x26 :
 				if (ignore){
+					fputc(0x26, outfile);
+					write++;
 					break;
 				}
 				pbyte(outfile, 1048576);
